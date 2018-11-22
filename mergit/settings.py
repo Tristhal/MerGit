@@ -1,0 +1,18 @@
+BACKGROUND_DARK_1 = (32, 34, 37)
+BACKGROUND_DARK_2 = (47, 49, 54)
+BACKGROUND_DARK_3 = (54, 57, 63)
+BACKGROUND_LIGHT_1 = (249, 248, 244)
+OUTLINE_DARK = (0, 0, 0)
+OUTLINE_LIGHT = (190, 196, 198)
+TEXT_LIGHT = (249, 248, 244)
+TEXT_DARK = (0, 0, 0)
+BUTTON_COLOR = BACKGROUND_DARK_1
+BUTTON_HOVER = (100, 110, 115)
+LINE_DELETE = (144, 0, 32)
+LINE_KEEP = (0, 86, 63)
+DEFAULT_TEXT = "./resources/JosefinSans-Regular.ttf"
+BOLD_FONT = "./resources/JosefinSans-Bold.ttf"
+LIGHT_FONT = "./resources/JosefinSans-Light.ttf"
+THIN_FONT = "./resources/JosefinSans-Thin.ttf"
+
+TABSPACES = 4
