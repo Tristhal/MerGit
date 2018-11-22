@@ -45,7 +45,7 @@ class InterfaceButtons():
         # Load Project Label
         text = UI.TextLine(buffersize, buffersize, self.menu, "Load", width=self.pannelHeight * 2 - 2 * buffersize,
                            height=self.pannelHeight - 2 * buffersize, background_color=(0, 0, 0, 0), text_color=TEXT_LIGHT, font_size=16,
-                           scaling="xw", border=False)
+                           scaling="xw", border=False, alignment="center center")
 
         self.menu.add("Load Project Label", text)
 
@@ -60,7 +60,7 @@ class InterfaceButtons():
         # Save Project Label 
         text = UI.TextLine(offset + buffersize, buffersize, self.menu, "Save", width=self.pannelHeight * 2 - 2 * buffersize,
                            height=self.pannelHeight - 2 * buffersize, background_color=(0, 0, 0, 0), text_color=TEXT_LIGHT, font_size=16,
-                           scaling="xw", border=False)
+                           scaling="xw", border=False, alignment="center center")
 
         self.menu.add("Save Project Label", text)
         offset += buffersize + self.pannelHeight * 2 - 2 * buffersize
@@ -72,7 +72,13 @@ class InterfaceButtons():
             print("Load Project", self.folder)
 
     def saveProject(self, button):
-        print("Save Project")
+        if self.projectController.activeProject is None:
+            self.dialogueBox.sendWarning("No Project Selected!")
+        elif self.dialogueBox.askConfirmation("Save Project?", "Do you want to save?"):
+            print("Save Project")
+        else:
+            # DO STUFF
+            pass
 
     # Consider moving to ConflictDisplay or ProjectDisplay
     def nextConflict(self, button):
@@ -122,7 +128,7 @@ class ConflictDisplay():
         self.menu.add("Title", text)
         '''
         # Text Box
-        textBox = UI.TextBox(0, 0, self.menu, lines=["dog€", "cat", "doggo", "/tbye", "jjjjjjjj", "\thello", "TTTTT", "/tbye", "jjjjjjjj", "\thello", "TTTTT", "/tbye", "jjjjjjjj","\thello", "TTTTT"], width=self.pannelWidth,
+        textBox = UI.TextBox(0, 0, self.menu, lines=["dog€", "cat", "doggo", "/tbye", "jjjjjjjj", "\thello", "TTTTT", "/tbye", "jjjjjjjj", "\thello", "TTTTT", "/tbye", "jjjjjjjj","\thello", "TTTTT"] * 100, width=self.pannelWidth,
                              height=self.pannelHeight, number_color=TEXT_LIGHT, text_color=TEXT_LIGHT, background_color=BACKGROUND_DARK_2,
                              line_states=3, line_colors=[BACKGROUND_DARK_2, LINE_DELETE, LINE_KEEP])
         textBox.scrollBar.box_bar.changeSettings(background_color=BACKGROUND_DARK_1)
@@ -169,8 +175,8 @@ class ProjectDisplay():
 
         # TestLabel
         text = UI.TextLine(0, 0, self.menu, "Active Project", width=self.pannelWidth, height=28,
-                           background_color=BACKGROUND_DARK_1, text_color=TEXT_LIGHT, alignment="top left", font_size=22, scaling="xw")
-        text.background.changeSettings(border=False)
+                           background_color=BACKGROUND_DARK_1, text_color=TEXT_LIGHT, alignment="top left", font_size=22,
+                           border=True, scaling="xw")
         self.menu.add("Title", text)
         offset = 28
 
@@ -182,7 +188,6 @@ class ProjectDisplay():
         else:
             text = UI.TextLine(0, offset, self.menu, "Load a Project", width=self.pannelWidth, height=18,
                                background_color=BACKGROUND_DARK_1, text_color=TEXT_LIGHT, alignment="center left", font_size=14, scaling="w", border=True)
-        text.background.changeSettings(border=False)
         self.menu.add("Active Project", text)
 
     def sliderTest(self, slider):
