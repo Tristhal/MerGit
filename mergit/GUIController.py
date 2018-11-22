@@ -3,6 +3,9 @@ import mergit.Project as Project
 import pygame as pyg
 import mergit.Widgets as Widgets
 
+'''
+1. GUIController
+'''
 
 class GUIController():
 

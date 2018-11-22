@@ -28,7 +28,7 @@ class ProjectController():
         self.numProjects += 1
         return filepath
 
-    def isGitRepo(file_path):
+    def isGitRepo(self, file_path):
         for name in os.listdir(file_path):
             if os.path.isdir(name) and name == ".git":
                 return True
