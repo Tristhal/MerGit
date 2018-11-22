@@ -506,7 +506,8 @@ class ScrollBar(GenericFrame):
             newpos = self.box_bar.getY() + 1
 
         if newpos:
-            self.scrollPosition = (max(min(newpos, self.getY() + self.getHeight() - int(self.box_bar.getHeight()) - edge_buffer), self.getY() + edge_buffer) - self.getY())  # Percentage Height
+            self.scrollPosition = (max(min(newpos, self.getY() + self.getHeight() - int(self.box_bar.getHeight()) - edge_buffer), self.getY()) - self.getY())  # Percentage Height
+            print("DEBUG", self.scrollPosition)
             self.scrollPosition /= self.getHeight()
             self.scrollPercentage = self.scrollPosition / ((self.getHeight() - int(self.box_bar.getHeight()) - edge_buffer) / self.getHeight())
             self.movedHandle()
@@ -546,11 +547,11 @@ def loadFont(font, font_size):
     else:
         return temp
 
-# scaling untested
+
 class TextLine(GenericFrame):
 
     def __init__(self, x, y, parent, text="", width=10, height=10, background_color=(255, 255, 255),
-                 text_color=(0, 0, 0), font=DEFAULT_TEXT, font_size=16, alignment="center center", scaling="xywh", border=True):
+                 text_color=(0, 0, 0), font=DEFAULT_TEXT, font_size=16, alignment="top left", scaling="xywh", border=True):
         GenericFrame.__init__(self, x, y, parent, width=width, height=height, scaling=scaling + "p")
 
         self.background = Box(0, 0, self, width=width, height=height, border=border, background_color=background_color, scaling=scaling)
@@ -648,7 +649,7 @@ class TextBox(GenericFrame):
         self.numberWidth = self.fontSpacing * len(str(len(self.listOfLines)))
         counter = 0
         textBuffer = 15
-        for x in range(self.firstLine, len(self.listOfLines), 1):
+        for x in range(self.firstLine, min(self.firstLine + int(self.getHeight()//self.lineHeight), len(self.listOfLines)), 1):
             # Graphical Settings
             textLinePosition = (self.getX() + self.numberWidth + textBuffer, self.getY() + (self.lineHeight * counter))
             textLineGBRect = (self.getX(), round(int(self.getY()) + (self.lineHeight * counter)), self.getWidth(), self.lineHeight)
@@ -683,7 +684,7 @@ class TextBox(GenericFrame):
 
     def createButtons(self):
         self.buttons = []
-        for i in range(min(self.getHeight()//self.lineHeight, len(self.lines) - self.firstLine)):
+        for i in range(int(min(self.getHeight()//self.lineHeight, len(self.lines) - self.firstLine))):
             buttonYPosition = self.getY() + (self.lineHeight * i)
 
             button = Button(self.getX(), buttonYPosition, self, self.numberWidth, self.lineHeight, background_color=BUTTON_COLOR, border=False)
@@ -701,6 +702,7 @@ class TextBox(GenericFrame):
         self.listOfLines.clear()
 
     def scrollHandle(self, scrollBar):
+        print("DEBUG", self.scrollBar.getValue())
         self.firstLine = int(scrollBar.getValue() * len(self.listOfLines))
         self.createButtons()
 
