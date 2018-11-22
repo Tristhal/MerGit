@@ -15,7 +15,7 @@ class DisplayMessage(QWidget):
         super().__init__()
 
     def sendWarning(self, message):
-        QMessageBox.question(self, 'Warning', message, QMessageBox.Ok)
+        QMessageBox.warning(self, 'Warning', message, QMessageBox.Ok)
 
     def askConfirmation(self, title, message):
         buttonReply = QMessageBox.question(self, title, message, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
