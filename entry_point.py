@@ -1,6 +1,7 @@
 import mergit.main as main
 import sys as sys
 import os
+#os.environ["PYGAME_FREETYPE"] = ""
 from PyQt5 import QtWidgets
 
 
@@ -9,5 +10,5 @@ if __name__ == '__main__':
 
     application = main.Application()
     application.run()
-    print("hello")
+
     quit()
