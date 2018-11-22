@@ -1,4 +1,3 @@
-resources/
 *.wav
 build/
 dist/

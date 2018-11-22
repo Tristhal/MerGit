@@ -7,12 +7,13 @@ import mergit.Widgets as Widgets
 1. GUIController
 '''
 
+
 class GUIController():
 
     def __init__(self, width, height):
         pyg.font.init()
         self.dialogueBox = Widgets.DisplayMessage()
-        self.projectController = Project.ProjectController(self.dialogueBox)
+        self.projectController = Project.ProjectController(self.dialogueBox.sendWarning)
         self._width = width
         self._height = height
         self.width = width
