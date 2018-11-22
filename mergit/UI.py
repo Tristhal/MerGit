@@ -2,30 +2,22 @@ from pygame import gfxdraw
 import pygame as pyg
 from collections import OrderedDict
 '''
-Pannel(self, x, y, width=10, height=10)
-
-Box(self, x, y, parent, width=10, height=10,
+1. Pannel(self, x, y, width=10, height=10)
+2. GenericFrame()
+3. Box(self, x, y, parent, width=10, height=10,
     hollow=False, border=False, background_color=(255, 255, 255),
     border_color=(0, 0, 0))
 
-Button(self, x, y, parent, width=10, height=10, functions_triggered=[], functions_pressed=[])
+4. Button(self, x, y, parent, width=10, height=10, functions_triggered=[], functions_pressed=[])
+5. CheckBox
+6. ScrollBar
+7. fontLoad
+8. TextLine
+9. TextBox
+10. Line
 '''
-TABSPACES = 4
+from mergit.settings import *
 
-BACKGROUND_DARK_1 = (38, 40, 41)
-BACKGROUND_LIGHT_1 = (249, 248, 244)
-BACKGROUND_LIGHT_2 = (255, 255, 255)
-OUTLINE_DARK = (0, 0, 0)
-OUTLINE_LIGHT = (190, 196, 198)
-TEXT_LIGHT = (255, 255, 255)
-TEXT_DARK = (0, 0, 0)
-BUTTON_COLOR = BACKGROUND_DARK_1
-BUTTON_HOVER = (100, 110, 115)
-DEFAULT_TEXT = "./resources/JosefinSans-Regular.ttf"
-BOLD_FONT = "./resources/JosefinSans-Bold.ttf"
-LIGHT_FONT = "./resources/JosefinSans-Light.ttf"
-THIN_FONT = "./resources/JosefinSans-Thin.ttf"
-#SEMI_BOLD_FONT = "./resources/JosefinSans-Bold.ttf"
 # ##########################################################################################################################################
 # ##########################################################################################################################################
 

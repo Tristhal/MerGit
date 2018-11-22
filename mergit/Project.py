@@ -1,20 +1,38 @@
 from collections import OrderedDict
+import os
+'''
+1. ProjectController
+2. Project
+3. ConflictManager
+4. Conflict
+'''
+# ##########################################################################################################################################
+# ##########################################################################################################################################
 
 
 class ProjectController():
 
-    def __init__(self):
+    def __init__(self, warning_handler):
         self.projects = OrderedDict()
         self.activeProject = None
         self.numProjects = 0
+        self.warningHandler = warning_handler
 
     def addProject(self, filepath):
         '''
         Returns project ID str
         '''
+        if not self.isGitRepo(filepath):
+            self.warningHandler("Not Git Repository")
         self.activeProject = Project(filepath.split("/")[-1], filepath)
         self.numProjects += 1
         return filepath
+
+    def isGitRepo(file_path):
+        for name in os.listdir(file_path):
+            if os.path.isdir(name) and name == ".git":
+                return True
+        return False
 
     def getProject(self, id):
         return self.projects[id]
@@ -27,6 +45,9 @@ class Project():
         self.path = path
         self.conflicts = None
         self.activeConflict = None
+
+# ##########################################################################################################################################
+# ##########################################################################################################################################
 
 
 class ConflictManager():
@@ -57,3 +78,4 @@ class Conflict():
         self.start_index = None
         self.end_index = None
         self.file_name = None
+        self.resolved = False

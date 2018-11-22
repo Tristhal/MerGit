@@ -1,42 +1,9 @@
 import mergit.UI as UI
-import mergit.FileExplorers as FileExplorers
+import mergit.Widgets as Widgets
 from mergit.settings import *
 
-
-class Test():
-    def __init__(self, x, y, pannelWidth, pannelHeight, projectController):
-        self.pannelWidth = pannelWidth
-        self.pannelHeight = pannelHeight
-        self.x = x
-        self.y = y
-        self.projectController = projectController
-        self.createMenu()
-
-    def createMenu(self):
-        # LoadProject Button
-        # Save Button
-        # Undo Button
-        # NextConflict
-        self.menu = UI.Pannel(self.x, self.y, width=self.pannelWidth, height=self.pannelHeight)
-
-        # Text Box
-        scrollBar = UI.ScrollBar(self.pannelWidth - 100, 100, self.menu, width=100, scaling="xyh")
-        self.menu.add("scroll", scrollBar)
-
-    def sliderTest(self, slider):
-        print(slider.getValue())
-
-    def testButton(self, button):
-        print(button.triggered)
-
-    def update(self, mx, my, mb, keys):
-        self.menu.update(mx, my, mb, keys)
-
-    def draw(self, screen):
-        self.menu.draw(screen)
-
-    def resize(self, width, height):
-        self.menu.resize(width, height)
+# ##########################################################################################################################################
+# ##########################################################################################################################################
 
 
 class InterfaceButtons():
@@ -46,7 +13,8 @@ class InterfaceButtons():
         self.x = x
         self.y = y
         self.projectController = projectController
-        self.fileGetter = FileExplorers.GetFile()
+        self.fileGetter = Widgets.GetFile()
+        self.dialogueBox = Widgets.DisplayMessage()
         self.createMenu()
 
     def createMenu(self):
@@ -122,6 +90,9 @@ class InterfaceButtons():
     def resize(self, width, height):
         self.menu.resize(width, height)
 
+# ##########################################################################################################################################
+# ##########################################################################################################################################
+
 
 class ConflictDisplay():
     def __init__(self, x, y, pannelWidth, pannelHeight, projectController):
@@ -166,6 +137,9 @@ class ConflictDisplay():
 
     def resize(self, width, height):
         self.menu.resize(width, height)
+
+# ##########################################################################################################################################
+# ##########################################################################################################################################
 
 
 class ProjectDisplay():

@@ -1,13 +1,15 @@
 import mergit.GUIInterfaces as GUI
 import mergit.Project as Project
 import pygame as pyg
+import mergit.Widgets as Widgets
 
 
 class GUIController():
 
     def __init__(self, width, height):
         pyg.font.init()
-        self.projectController = Project.ProjectController()
+        self.dialogueBox = Widgets.DisplayMessage()
+        self.projectController = Project.ProjectController(self.dialogueBox)
         self._width = width
         self._height = height
         self.width = width
