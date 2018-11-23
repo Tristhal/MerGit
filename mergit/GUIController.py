@@ -2,6 +2,7 @@ import mergit.GUIInterfaces as GUI
 import mergit.Project as Project
 import pygame as pyg
 import mergit.Widgets as Widgets
+import os
 
 '''
 1. GUIController

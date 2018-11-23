@@ -67,7 +67,9 @@ class InterfaceButtons():
 
     def loadProject(self, button):
         self.folder = self.fileGetter.getFolder()
-        if not(self.folder is None):
+        if self.folder == "":
+            print("Projet Load Cancelled")
+        elif not(self.folder is None):
             self.projectController.addProject(self.folder)
             print("Load Project", self.folder)
 
@@ -135,12 +137,6 @@ class ConflictDisplay():
         textBox.scrollBar.box_scroll_bar.changeSettings(border_color=OUTLINE_DARK, background_color=BACKGROUND_DARK_3)
         self.menu.add("textBox", textBox)
 
-    def sliderTest(self, slider):
-        print(slider.getValue())
-
-    def testButton(self, button):
-        print(button.triggered)
-
     def update(self, mx, my, mb, keys):
         self.menu.update(mx, my, mb, keys)
 
@@ -181,7 +177,6 @@ class ProjectDisplay():
         offset = 28
 
         # Current Project
-        print(self.projectController.activeProject)
         if not (self.projectController.activeProject is None):
             text = UI.TextLine(0, offset, self.menu, self.projectController.activeProject.name, width=self.pannelWidth, height=18,
                                background_color=BACKGROUND_DARK_1, text_color=TEXT_LIGHT, alignment="center left", font_size=14, scaling="w", border=True)
@@ -189,12 +184,6 @@ class ProjectDisplay():
             text = UI.TextLine(0, offset, self.menu, "Load a Project", width=self.pannelWidth, height=18,
                                background_color=BACKGROUND_DARK_1, text_color=TEXT_LIGHT, alignment="center left", font_size=14, scaling="w", border=True)
         self.menu.add("Active Project", text)
-
-    def sliderTest(self, slider):
-        print(slider.getValue())
-
-    def testButton(self, button):
-        print(button.triggered)
 
     def update(self, mx, my, mb, keys):
         self.menu.update(mx, my, mb, keys)

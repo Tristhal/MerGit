@@ -94,7 +94,7 @@ class Pannel():
         return self.box
 
     # Override
-    def getX(self, debug=False):
+    def getX(self):
         if "x" in self.scaling:
             if not("w" in self.scaling) and "p" in self.scaling:
                 return self._x * self.scalex + self._width * (self.scalex - 1)
@@ -148,7 +148,7 @@ class GenericFrame():
     def update(self, mx, my, mb, keys):
         pass
 
-    def getX(self, debug=False):
+    def getX(self):
         if "x" in self.scaling:
             if not("w" in self.scaling) and "p" in self.scaling:
                 return self._x * self.scalex + self.parent.getX() + self._width * (self.scalex - 1)
@@ -507,7 +507,6 @@ class ScrollBar(GenericFrame):
 
         if newpos:
             self.scrollPosition = (max(min(newpos, self.getY() + self.getHeight() - int(self.box_bar.getHeight()) - edge_buffer), self.getY()) - self.getY())  # Percentage Height
-            print("DEBUG", self.scrollPosition)
             self.scrollPosition /= self.getHeight()
             self.scrollPercentage = self.scrollPosition / ((self.getHeight() - int(self.box_bar.getHeight()) - edge_buffer) / self.getHeight())
             self.movedHandle()
@@ -702,7 +701,6 @@ class TextBox(GenericFrame):
         self.listOfLines.clear()
 
     def scrollHandle(self, scrollBar):
-        print("DEBUG", self.scrollBar.getValue())
         self.firstLine = int(scrollBar.getValue() * len(self.listOfLines))
         self.createButtons()
 
