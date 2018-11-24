@@ -94,6 +94,7 @@ class Folder:
                     print("Unknown object in file Structure")
         return None
 
+
 class FileStructure:
 
     def __init__(self, path):
@@ -111,7 +112,7 @@ class FileStructure:
 
 '''
 fs = FileStructure(os.getcwd())
-for i in fs.getStructureContents(["txt"], True):
+for i in fs.getStructureContents(["txt", "py"], True):
     print(i)
 
 print("--------------------------------")
