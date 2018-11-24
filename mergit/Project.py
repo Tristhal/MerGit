@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import os
+import mergit.FileStructure as fs
 '''
 1. ProjectController
 2. Project
@@ -41,7 +42,7 @@ class ProjectController():
 class Project():
 
     def __init__(self, name, path):
-        self.fileSystem = None
+        self.fileSystem = fs.FileStructure(path)
         self.name = name
         self.path = path
         self.conflicts = None
