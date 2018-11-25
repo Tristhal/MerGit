@@ -65,6 +65,36 @@ class InterfaceButtons():
         self.menu.add("Save Project Label", text)
         offset += buffersize + self.pannelHeight * 2 - 2 * buffersize
 
+        # Last Conflict Button
+        button = UI.Button(offset + buffersize, buffersize, self.menu, width=self.pannelHeight * 2 - 2 * buffersize,
+                           height=self.pannelHeight - 2 * buffersize, functions_triggered=[self.lastConflict], background_color=BUTTON_COLOR, scaling="xw")
+        button.box_base.changeSettings(background_color=BUTTON_COLOR)
+        button.box_hover.changeSettings(background_color=BUTTON_HOVER)
+        self.menu.add("Last Project Button", button)
+
+        # Last Conflict Label 
+        text = UI.TextLine(offset + buffersize, buffersize, self.menu, "Last", width=self.pannelHeight * 2 - 2 * buffersize,
+                           height=self.pannelHeight - 2 * buffersize, background_color=(0, 0, 0, 0), text_color=TEXT_LIGHT, font_size=16,
+                           scaling="xw", border=False, alignment="center center")
+
+        self.menu.add("Last Conflict Label", text)
+        offset += buffersize + self.pannelHeight * 2 - 2 * buffersize
+
+        # NextConflict Button
+        button = UI.Button(offset + buffersize, buffersize, self.menu, width=self.pannelHeight * 2 - 2 * buffersize,
+                           height=self.pannelHeight - 2 * buffersize, functions_triggered=[self.nextConflict], background_color=BUTTON_COLOR, scaling="xw")
+        button.box_base.changeSettings(background_color=BUTTON_COLOR)
+        button.box_hover.changeSettings(background_color=BUTTON_HOVER)
+        self.menu.add("Last Conflict Button", button)
+
+        # Save Project Label 
+        text = UI.TextLine(offset + buffersize, buffersize, self.menu, "Next", width=self.pannelHeight * 2 - 2 * buffersize,
+                           height=self.pannelHeight - 2 * buffersize, background_color=(0, 0, 0, 0), text_color=TEXT_LIGHT, font_size=16,
+                           scaling="xw", border=False, alignment="center center")
+
+        self.menu.add("Next Conflict Label", text)
+        offset += buffersize + self.pannelHeight * 2 - 2 * buffersize
+
     def loadProject(self, button):
         self.folder = self.fileGetter.getFolder()
         if self.folder == "":
@@ -135,10 +165,13 @@ class ConflictDisplay():
                              line_states=3, line_colors=[BACKGROUND_DARK_2, LINE_DELETE, LINE_KEEP])
         textBox.scrollBar.box_bar.changeSettings(background_color=BACKGROUND_DARK_1)
         textBox.scrollBar.box_scroll_bar.changeSettings(border_color=OUTLINE_DARK, background_color=BACKGROUND_DARK_3)
-        self.menu.add("textBox", textBox)
+        self.menu.add("File View", textBox)
 
     def update(self, mx, my, mb, keys):
         self.menu.update(mx, my, mb, keys)
+
+        if (self.projectController.changedConflict):
+            self.menu.get("File View").setText(self.projectController.getFile(self.projectController.activeFile))
 
     def draw(self, screen):
         self.menu.draw(screen)

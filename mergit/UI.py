@@ -485,12 +485,14 @@ class ScrollBar(GenericFrame):
         # mouse state variables
         self.was_pressed = 0
 
+        self.edge_buffer = 1
+
     def draw(self, screen):
         self.box_scroll_bar.draw(screen)
         self.box_bar.draw(screen)
 
     def update(self, mx, my, mb, keys):
-        edge_buffer = 1
+        edge_buffer = self.edge_buffer
 
         newpos = 0
         if mb[0] == 1:
@@ -516,6 +518,14 @@ class ScrollBar(GenericFrame):
     def movedHandle(self):
         for i in self.functions_moved:
             i(self)
+
+    def setPercentage(self, percentage):
+        edge_buffer = self.edge_buffer
+        # By solving the equation for scrollPosition
+        self.scrollPercentage = percentage
+        self.scrollPosition = percentage * ((self.getHeight() - int(self.box_bar.getHeight()) - edge_buffer) / self.getHeight())
+        self.box_bar.setNewY(self.scrollPosition * self.getHeight())
+        self.movedHandle()
 
     def getValue(self):
         return self.scrollPercentage
@@ -626,13 +636,10 @@ class TextBox(GenericFrame):
         self.box = Box(0, 0, self, width=width, height=height, scaling=scaling, background_color=background_color)
         self.scrollBar = ScrollBar(self.getWidth() - 20, 0, self, 20, self.getHeight(), functions_moved=[self.scrollHandle], bar_size=20, scaling=scaling.replace("w", ""))
         # Data
-        self.lines = lines
-        self.listOfLines = []
-        self.populate(lines)
         self.firstLine = 0
-        self.numberWidth = self.fontSpacing * len(str(len(self.listOfLines)))
-        # Component
-        self.createButtons()
+        self.numberWidth = self.fontSpacing * len(str(len(lines)))
+        self.populate(lines)  # Also creates buttons
+        
 
     def setFont(self, font_name, font_size, text_color=None):
         self.font_size = font_size
@@ -668,7 +675,13 @@ class TextBox(GenericFrame):
             # Update
             counter += 1
         self.scrollBar.draw(screen)
-
+    
+    def goToLine(self, line):
+        if(line >= len(self.listOfLines)):
+            print("Error: Line out of bounds")
+        else:
+            self.scrollBar.setPercentage(line / len(self.listOfLines))
+    
     def update(self, mx, my, mb, keys):
         self.scrollBar.update(mx, my, mb, keys)
         for i in range(len(self.buttons)):
@@ -677,13 +690,21 @@ class TextBox(GenericFrame):
                 self.listOfLines[self.firstLine + i].nextState()
 
     def populate(self, lines):
+        self.lines = lines
+        self.listOfLines = []
         # lines = array of text lines
-        for x in self.lines:
+        for x in lines:
             self.listOfLines.append(Line(x, self.lineStates, self.textColor, self.font, self.lineColors))
+        self.createButtons()
+
+    def setText(self, text):
+        self.populate(text)
+        self.numberWidth = self.fontSpacing * len(str(len(text)))
+        self.scrollHandle(self.scrollBar)  # To reset buttons and view
 
     def createButtons(self):
         self.buttons = []
-        for i in range(int(min(self.getHeight()//self.lineHeight, len(self.lines) - self.firstLine))):
+        for i in range(int(min(self.getHeight() // self.lineHeight, len(self.lines) - self.firstLine))):
             buttonYPosition = self.getY() + (self.lineHeight * i)
 
             button = Button(self.getX(), buttonYPosition, self, self.numberWidth, self.lineHeight, background_color=BUTTON_COLOR, border=False)
@@ -691,13 +712,8 @@ class TextBox(GenericFrame):
             button.box_hover.changeSettings(background_color=BUTTON_HOVER)
             self.buttons.append(button)
 
-    def remove(self, index):
-        del self.listOfLines[index]
-
-    def add(self, index, line):
-        self.listOfLines.inset(index, [self.font.render(line, True, self.textColor, (255, 255, 255))])
-
     def clear(self):
+        self.firstLine = 0
         self.listOfLines.clear()
 
     def scrollHandle(self, scrollBar):

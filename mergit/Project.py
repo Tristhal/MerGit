@@ -19,6 +19,11 @@ class ProjectController():
         self.activeProject = None
         self.numProjects = 0
         self.warningHandler = warning_handler
+        self.activeFile = None
+        self.activeConflict = None
+
+        # Flags
+        self.changedConflict = False
 
     def addProject(self, filepath):
         '''
@@ -36,8 +41,31 @@ class ProjectController():
             self.activeProject.conflicts.append(self.conflictManager.find_conflicts(file, path.split("/")[-1]))
             self.activeProject.files.append(file)
 
+        if len(self.activeProject.filePaths) > 0:
+            self.activeFile = 0
+            self.changedConflict = True
+            if len(self.activeProject.conflicts[0]) > 0:
+                self.activeConflict = 0
+            else:
+                self.activeConflict = None
+
         self.numProjects += 1
         return len(self.activeProject.filePaths)
+
+    def getConflicts(self, id):
+        return self.activeProject.conflicts[id]
+
+    def getConflict(self, id):
+        if self.activeConflict is None:
+            print("Error: No active conflict")
+        else:
+            return self.getConflict[id][self.activeConflict]
+
+    def getFile(self, id):
+        return self.activeProject.files[id]
+
+    def getActiveFilename(self, id):
+        return self.activeProject.filePaths[id]
 
     def isGitRepo(self, file_path):
         for name in os.listdir(file_path):
@@ -47,6 +75,9 @@ class ProjectController():
 
     def getProject(self, id):
         return self.projects[id]
+
+    def update(self):
+        self.changedConflict = False
 
 
 class Project():

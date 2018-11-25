@@ -37,6 +37,8 @@ class GUIController():
         for i in range(len(self.objects)):
             self.objects[i].update(mx-self.positions[i][0], my-self.positions[i][1], mb, keys)
 
+        self.projectController.update()
+
     def draw(self, screen):
         for i in range(len(self.objects)):
             self.objects[i].draw(self.surfaces[i])
