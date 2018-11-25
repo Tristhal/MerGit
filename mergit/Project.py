@@ -15,19 +15,29 @@ class ProjectController():
 
     def __init__(self, warning_handler):
         self.projects = OrderedDict()
+        self.conflictManager = ConflictManager()
         self.activeProject = None
         self.numProjects = 0
         self.warningHandler = warning_handler
 
     def addProject(self, filepath):
         '''
-        Returns project ID str
+        Returns number of files
         '''
         if not self.isGitRepo(filepath):
             self.warningHandler("Not Git Repository")
         self.activeProject = Project(filepath.split("/")[-1], filepath)
+
+        for path in self.activeProject.filePaths:
+            file = self.activeProject.fs.getFile(path)
+            file = file.open()  # Get lines
+            file = file.split("\n")
+            # Add file and associated conflicts to the project
+            self.activeProject.conflicts.append(self.conflictManager.find_conflicts(file, path.split("/")[-1]))
+            self.activeProject.files.append(file)
+
         self.numProjects += 1
-        return filepath
+        return len(self.activeProject.filePaths)
 
     def isGitRepo(self, file_path):
         for name in os.listdir(file_path):
@@ -42,10 +52,18 @@ class ProjectController():
 class Project():
 
     def __init__(self, name, path):
-        self.fileSystem = fs.FileStructure(path)
+        self.fs = fs.FileStructure(path)
+
+        # Data
+        self.filePaths = self.fs.getStructureContents(["txt", "py"], True)
+        self.files = []
+        self.conflicts = []
+
+        # Identifiers
         self.name = name
         self.path = path
-        self.conflicts = None
+
+        # Status
         self.activeConflict = None
 
 # ##########################################################################################################################################
@@ -53,14 +71,17 @@ class Project():
 
 
 class ConflictManager():
+    
+    def __init__(self):
+        pass
 
-    def find_conflicts(file_string):
+    def find_conflicts(self, lines, filename):
         conflicts = []
-        lines = file_string.split("\n")
+        # lines = file_string.split("\n")
         line_index = 0
         while (line_index < len(lines)):
             if "<<<<" in lines[line_index]:
-                conflict = Conflict()
+                conflict = Conflict(filename)
                 conflict.start_index = line_index + 1
                 while(line_index < len(lines)):
                     if ">>>>" in lines[line_index]:
@@ -75,9 +96,9 @@ class ConflictManager():
 
 class Conflict():
 
-    def __init__(self):
+    def __init__(self, filename):
         self.lines = []
         self.start_index = None
         self.end_index = None
-        self.file_name = None
+        self.file_name = filename
         self.resolved = False
