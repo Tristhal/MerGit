@@ -115,6 +115,7 @@ class InterfaceButtons():
     # Consider moving to ConflictDisplay or ProjectDisplay
     def nextConflict(self, button):
         print("Go to next conflict")
+        self.projectController.nextConflict()
 
     def lastConflict(self, button):
         print("Go to last conflict")
@@ -171,7 +172,7 @@ class ConflictDisplay():
         self.menu.update(mx, my, mb, keys)
 
         if (self.projectController.changedConflict):
-            self.menu.get("File View").setText(self.projectController.getFile(self.projectController.activeFile))
+            self.menu.get("File View").setText(self.projectController.getFile())
 
     def draw(self, screen):
         self.menu.draw(screen)

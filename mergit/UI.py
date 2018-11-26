@@ -640,7 +640,6 @@ class TextBox(GenericFrame):
         self.numberWidth = self.fontSpacing * len(str(len(lines)))
         self.populate(lines)  # Also creates buttons
         
-
     def setFont(self, font_name, font_size, text_color=None):
         self.font_size = font_size
         self.fontType = font_name

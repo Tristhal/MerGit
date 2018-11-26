@@ -31,6 +31,10 @@ class ProjectController():
         '''
         if not self.isGitRepo(filepath):
             self.warningHandler("Not Git Repository")
+        # Reset variables
+        self.activeFile = None
+        self.activeConflict = None
+
         self.activeProject = Project(filepath.split("/")[-1], filepath)
 
         for path in self.activeProject.filePaths:
@@ -52,17 +56,42 @@ class ProjectController():
         self.numProjects += 1
         return len(self.activeProject.filePaths)
 
-    def getConflicts(self, id):
-        return self.activeProject.conflicts[id]
+    def nextConflict(self):
+        self.changedConflict = True
+        numConflicts = len(self.getConflicts())
+        if self.activeConflict is None or numConflicts == 0 or self.activeConflict >= numConflicts:
+            self.nextFile()
+        else:
+            self.activeConflict = (self.activeConflict + 1)
+            if self.activeConflict >= len(self.activeProject.conflicts[self.activeFile]):
+                self.nextFile()
+            
+    def nextFile(self):
+        print("Debug: Going to next file")
+        self.activeConflict = None
+        if len(self.activeProject.files) == 0:
+            print("Debug: No Files in Project")
+            self.activeFile = None
+        else:
+            # Cycle to next file
+            self.activeFile = (self.activeFile + 1) % len(self.activeProject.filePaths)
+            # Select the first conflict if available
+            if len(self.activeProject.conflicts[self.activeFile]) > 0:
+                self.activeConflict = 0
+            else:
+                self.activeConflict = None
 
-    def getConflict(self, id):
+    def getConflicts(self):
+        return self.activeProject.conflicts[self.activeFile]
+
+    def getConflict(self):
         if self.activeConflict is None:
             print("Error: No active conflict")
         else:
-            return self.getConflict[id][self.activeConflict]
+            return self.getConflict[self.activeFile][self.activeConflict]
 
-    def getFile(self, id):
-        return self.activeProject.files[id]
+    def getFile(self):
+        return self.activeProject.files[self.activeFile]
 
     def getActiveFilename(self, id):
         return self.activeProject.filePaths[id]
@@ -88,6 +117,7 @@ class Project():
         # Data
         self.filePaths = self.fs.getStructureContents(["txt", "py"], True)
         self.files = []
+        self.lineStates = []
         self.conflicts = []
 
         # Identifiers
