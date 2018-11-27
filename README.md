@@ -1,6 +1,10 @@
 # MerGit
-Tool to merge git conflicts
+Tool to merge git conflicts.
 
-To run launch entry_point.py
+## Requirements
+- Python 3
+- pygame
+- PyQt5
 
-Need pygame, PyQt5 to run
+## Running the Application
+launch entry_point.py
