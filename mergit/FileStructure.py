@@ -109,6 +109,10 @@ class FileStructure:
     def getFile(self, filepath):
         return self.root.getFile(filepath)
 
+    def writeOut(self, filepath, message):
+        with open(filepath, "w") as f:
+            f.write(message)
+
 
 '''
 fs = FileStructure(os.getcwd())

@@ -108,6 +108,7 @@ class InterfaceButtons():
             self.dialogueBox.sendWarning("No Project Selected!")
         elif self.dialogueBox.askConfirmation("Save Project?", "Do you want to save?"):
             print("Save Project")
+            self.projectController.activeProject.save()
         else:
             # DO STUFF
             pass
@@ -167,7 +168,7 @@ class ConflictDisplay():
         self.menu.add("Title", text)
         '''
         # Text Box
-        textBox = UI.TextBox(0, 0, self.menu, lines=["dog€", "cat", "doggo", "/tbye", "jjjjjjjj", "\thello", "TTTTT", "/tbye", "jjjjjjjj", "\thello", "TTTTT", "/tbye", "jjjjjjjj","\thello", "TTTTT"] * 100, width=self.pannelWidth,
+        textBox = UI.TextBox(0, 0, self.menu, lines=["Load a project to get started"], width=self.pannelWidth,
                              height=self.pannelHeight, number_color=TEXT_LIGHT, text_color=TEXT_LIGHT, background_color=BACKGROUND_DARK_2,
                              line_states=3, line_colors=[BACKGROUND_DARK_2, LINE_KEEP, LINE_DELETE])
         textBox.scrollBar.box_bar.changeSettings(background_color=BACKGROUND_DARK_1)

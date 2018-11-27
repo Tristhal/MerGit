@@ -143,10 +143,19 @@ class Project():
         # Identifiers
         self.name = name
         self.path = path
+        self.keep = [0,1]
 
         # Status
         self.activeConflict = None
-
+    
+    def save(self):
+        for i in range(len(self.filePaths)):
+            output = []
+            for j in range(len(self.files[i])):
+                if self.lineStates[i][j] in self.keep:
+                    output.append(self.files[i][j])
+                
+            self.fs.writeOut(self.filePaths[i], "\n".join(output))
 # ##########################################################################################################################################
 # ##########################################################################################################################################
 
