@@ -623,7 +623,7 @@ class TextBox(GenericFrame):
         Constructor
         '''
         GenericFrame.__init__(self, x, y, parent, width=width, height=height, scaling=scaling + "p")
-
+        self.changedState = False
         # Graphical Settings
         # Text
         self.setFont(font, font_size, text_color=text_color)  # assign all font variables
@@ -682,11 +682,13 @@ class TextBox(GenericFrame):
             self.scrollBar.setPercentage(line / len(self.listOfLines))
     
     def update(self, mx, my, mb, keys):
+        self.changedState = False
         self.scrollBar.update(mx, my, mb, keys)
         for i in range(len(self.buttons)):
             self.buttons[i].update(mx, my, mb, keys)
             if(self.buttons[i].triggered):
                 self.listOfLines[self.firstLine + i].nextState()
+                self.changedState = True
 
     def populate(self, lines):
         self.lines = lines
@@ -700,6 +702,16 @@ class TextBox(GenericFrame):
         self.populate(text)
         self.numberWidth = self.fontSpacing * len(str(len(text)))
         self.scrollHandle(self.scrollBar)  # To reset buttons and view
+
+    def getStates(self):
+        val = [0]*len(self.listOfLines)
+        for i in range(len(self.listOfLines)):
+            val[i] = self.listOfLines[i].state
+        return val
+
+    def setStates(self, states):
+        for i in range(len(self.listOfLines)):
+            self.listOfLines[i].state = states[i]
 
     def createButtons(self):
         self.buttons = []

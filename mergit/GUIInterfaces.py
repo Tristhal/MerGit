@@ -114,11 +114,17 @@ class InterfaceButtons():
 
     # Consider moving to ConflictDisplay or ProjectDisplay
     def nextConflict(self, button):
-        print("Go to next conflict")
-        self.projectController.nextConflict()
+        if self.projectController.activeProject is None:
+            self.dialogueBox.sendWarning("No Project Selected!")
+        else:
+            print("Go to next conflict")
+            self.projectController.nextConflict()
 
     def lastConflict(self, button):
-        print("Go to last conflict")
+        if self.projectController.activeProject is None:
+            self.dialogueBox.sendWarning("No Project Selected!")
+        else:
+            print("Go to last conflict")
 
     def undoButton(self, button):
         print("Undo")
@@ -163,7 +169,7 @@ class ConflictDisplay():
         # Text Box
         textBox = UI.TextBox(0, 0, self.menu, lines=["dog€", "cat", "doggo", "/tbye", "jjjjjjjj", "\thello", "TTTTT", "/tbye", "jjjjjjjj", "\thello", "TTTTT", "/tbye", "jjjjjjjj","\thello", "TTTTT"] * 100, width=self.pannelWidth,
                              height=self.pannelHeight, number_color=TEXT_LIGHT, text_color=TEXT_LIGHT, background_color=BACKGROUND_DARK_2,
-                             line_states=3, line_colors=[BACKGROUND_DARK_2, LINE_DELETE, LINE_KEEP])
+                             line_states=3, line_colors=[BACKGROUND_DARK_2, LINE_KEEP, LINE_DELETE])
         textBox.scrollBar.box_bar.changeSettings(background_color=BACKGROUND_DARK_1)
         textBox.scrollBar.box_scroll_bar.changeSettings(border_color=OUTLINE_DARK, background_color=BACKGROUND_DARK_3)
         self.menu.add("File View", textBox)
@@ -173,6 +179,17 @@ class ConflictDisplay():
 
         if (self.projectController.changedConflict):
             self.menu.get("File View").setText(self.projectController.getFile())
+            self.menu.get("File View").setStates(self.projectController.getLineStates())
+            if(self.projectController.getConflict() is not None):
+                self.menu.get("File View").goToLine(self.projectController.getConflict().start_index)
+            else:
+                self.menu.get("File View").goToLine(0)
+        if (self.menu.get("File View").changedState):
+            if (self.projectController.activeProject == None):
+                print("Debug: Modified Lines without selected project")
+            else:
+                print("Debug: Updated line selection")
+                self.projectController.setLineStates(self.menu.get("File View").getStates())
 
     def draw(self, screen):
         self.menu.draw(screen)
@@ -218,6 +235,15 @@ class ProjectDisplay():
             text = UI.TextLine(0, offset, self.menu, "Load a Project", width=self.pannelWidth, height=18,
                                background_color=BACKGROUND_DARK_1, text_color=TEXT_LIGHT, alignment="center left", font_size=14, scaling="w", border=True)
         self.menu.add("Active Project", text)
+
+        offset += 18
+        # Text Box
+        textBox = UI.TextBox(0, offset, self.menu, lines=[], width=self.pannelWidth,
+                             height=self.pannelHeight-offset, number_color=TEXT_LIGHT, text_color=TEXT_LIGHT, background_color=BACKGROUND_DARK_2,
+                             line_states=2, line_colors=[BACKGROUND_DARK_3, LINE_DELETE, LINE_KEEP])
+        textBox.scrollBar.box_bar.changeSettings(background_color=BACKGROUND_DARK_1)
+        textBox.scrollBar.box_scroll_bar.changeSettings(border_color=OUTLINE_DARK, background_color=BACKGROUND_DARK_3)
+        self.menu.add("Conflict View", textBox)
 
     def update(self, mx, my, mb, keys):
         self.menu.update(mx, my, mb, keys)

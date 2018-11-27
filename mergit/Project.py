@@ -37,14 +37,25 @@ class ProjectController():
 
         self.activeProject = Project(filepath.split("/")[-1], filepath)
 
+        conflictedPaths = []
         for path in self.activeProject.filePaths:
             file = self.activeProject.fs.getFile(path)
             file = file.open()  # Get lines
             file = file.split("\n")
             # Add file and associated conflicts to the project
-            self.activeProject.conflicts.append(self.conflictManager.find_conflicts(file, path.split("/")[-1]))
-            self.activeProject.files.append(file)
+            conflicts = self.conflictManager.find_conflicts(file, path.split("/")[-1])
+            if len(conflicts) > 0:
+                conflictedPaths.append(path)
+                self.activeProject.conflicts.append(conflicts)
 
+                # Adjust Line states for the conflicts
+                self.activeProject.lineStates.append([0]*len(file))
+                for conflict in self.activeProject.conflicts[-1]:
+                    self.activeProject.lineStates[-1][conflict.start_index:conflict.end_index + 1] = [1] * (conflict.end_index + 1 - conflict.start_index)
+
+                self.activeProject.files.append(file)
+        # Set paths to only paths with conflicts
+        self.activeProject.filePaths = conflictedPaths
         if len(self.activeProject.filePaths) > 0:
             self.activeFile = 0
             self.changedConflict = True
@@ -88,10 +99,19 @@ class ProjectController():
         if self.activeConflict is None:
             print("Error: No active conflict")
         else:
-            return self.getConflict[self.activeFile][self.activeConflict]
+            return self.getConflicts()[self.activeConflict]
 
     def getFile(self):
         return self.activeProject.files[self.activeFile]
+
+    def getLineStates(self):
+        return self.activeProject.lineStates[self.activeFile]
+
+    def setLineStates(self, lineStates):
+        if(len(lineStates) != len(self.activeProject.lineStates[self.activeFile])):
+            print("Error: Line states not the same size as number of lines in the active project")
+            return
+        self.activeProject.lineStates[self.activeFile] = lineStates
 
     def getActiveFilename(self, id):
         return self.activeProject.filePaths[id]
@@ -143,10 +163,10 @@ class ConflictManager():
         while (line_index < len(lines)):
             if "<<<<" in lines[line_index]:
                 conflict = Conflict(filename)
-                conflict.start_index = line_index + 1
+                conflict.start_index = line_index
                 while(line_index < len(lines)):
                     if ">>>>" in lines[line_index]:
-                        conflict.end_index = line_index + 1
+                        conflict.end_index = line_index
                         conflict.lines = lines[conflict.start_index - 1:conflict.end_index]
                         conflicts.append(conflict)
                         break
