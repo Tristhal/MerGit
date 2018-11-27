@@ -108,6 +108,7 @@ class InterfaceButtons():
             self.dialogueBox.sendWarning("No Project Selected!")
         elif self.dialogueBox.askConfirmation("Save Project?", "Do you want to save?"):
             print("Save Project")
+            self.projectController.activeProject.save()
         else:
             # DO STUFF
             pass
