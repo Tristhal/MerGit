@@ -108,7 +108,6 @@ class InterfaceButtons():
             self.dialogueBox.sendWarning("No Project Selected!")
         elif self.dialogueBox.askConfirmation("Save Project?", "Do you want to save?"):
             print("Save Project")
-            self.projectController.activeProject.save()
         else:
             # DO STUFF
             pass
@@ -168,9 +167,11 @@ class ConflictDisplay():
         self.menu.add("Title", text)
         '''
         # Text Box
-        textBox = UI.TextBox(0, 0, self.menu, lines=["Load a project to get started"], width=self.pannelWidth,
-                             height=self.pannelHeight, number_color=TEXT_LIGHT, text_color=TEXT_LIGHT, background_color=BACKGROUND_DARK_2,
-                             line_states=3, line_colors=[BACKGROUND_DARK_2, LINE_KEEP, LINE_DELETE])
+        textBox = UI.TextBox(0, 0, self.menu, lines=["Greetings!", "Welcome to MerGit, a simple tool to merge git conflicts.", "", "To begin, click the Load button to select a the Project you want to work on.","",
+                                                    "Conflicts will be automatically highlighted in green.","   This is to prevent accidental deletion.", "You can select a line by clicking on the line number to toggle its selection.",
+                                                    "If the line color is green, it will be kept.", "If its red, it will be deleted","", "Changes only take effect on save.","","Thank you for using MerGit - The MerGit Team"], 
+                            width=self.pannelWidth, height=self.pannelHeight, number_color=TEXT_LIGHT, text_color=TEXT_LIGHT, background_color=BACKGROUND_DARK_2, 
+                            line_states=3, line_colors=[BACKGROUND_DARK_2, LINE_KEEP, LINE_DELETE])
         textBox.scrollBar.box_bar.changeSettings(background_color=BACKGROUND_DARK_1)
         textBox.scrollBar.box_scroll_bar.changeSettings(border_color=OUTLINE_DARK, background_color=BACKGROUND_DARK_3)
         self.menu.add("File View", textBox)
