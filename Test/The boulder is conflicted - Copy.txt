@@ -16,9 +16,3 @@ ask the boulder.
 =======
 ask your question in IRC.
 >>>>>>> branch-a
-direct your questions to the boulder.
-<<<< CONFLICT 2
-Hello
-=====
-World
->>>>

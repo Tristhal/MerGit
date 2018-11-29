@@ -7,8 +7,14 @@
 
 ###############################################################################################
 '''
+'''
+1. File
+2. Folder
+3. FileStructure
+'''
 
 import os
+
 
 class File:
 
@@ -41,6 +47,7 @@ class File:
     def dprint(self):
         print("File: "+self.filepath)
 
+
 class Folder:
 
     def __init__(self, path):
@@ -57,8 +64,8 @@ class Folder:
             else:
                 self.contents.append(Folder(self.path+"/"+i))
 
-        #self.contents.sort()  // finish this in later implementation
-        #done
+        # self.contents.sort()  // finish this in later implementation
+        # done
 
     def dprint(self):
         print(" --- Folder --- ")

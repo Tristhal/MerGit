@@ -67,17 +67,20 @@ class ProjectController():
         self.numProjects += 1
         return len(self.activeProject.filePaths)
 
-    def nextConflict(self):
+    def nextConflict(self, direction=1):
         self.changedConflict = True
         numConflicts = len(self.getConflicts())
         if self.activeConflict is None or numConflicts == 0 or self.activeConflict >= numConflicts:
-            self.nextFile()
+            self.nextFile(direction=direction)
         else:
-            self.activeConflict = (self.activeConflict + 1)
+            self.activeConflict = (self.activeConflict + direction) 
             if self.activeConflict >= len(self.activeProject.conflicts[self.activeFile]):
-                self.nextFile()
+                self.nextFile(direction=direction)
+            if self.activeConflict < 0:
+                self.nextFile(direction=direction)
+            #self.activeConflict = self.activeConflict % numConflicts
             
-    def nextFile(self):
+    def nextFile(self, direction=1):
         print("Debug: Going to next file")
         self.activeConflict = None
         if len(self.activeProject.files) == 0:
@@ -85,10 +88,13 @@ class ProjectController():
             self.activeFile = None
         else:
             # Cycle to next file
-            self.activeFile = (self.activeFile + 1) % len(self.activeProject.filePaths)
+            self.activeFile = (self.activeFile + direction) % len(self.activeProject.filePaths)
             # Select the first conflict if available
             if len(self.activeProject.conflicts[self.activeFile]) > 0:
-                self.activeConflict = 0
+                if direction == 1:
+                    self.activeConflict = 0
+                else:
+                    self.activeConflict = len(self.activeProject.conflicts[self.activeFile]) - 1
             else:
                 self.activeConflict = None
 
@@ -102,7 +108,16 @@ class ProjectController():
             return self.getConflicts()[self.activeConflict]
 
     def getFile(self):
-        return self.activeProject.files[self.activeFile]
+        if self.activeFile is not None:
+            return self.activeProject.files[self.activeFile]
+        else:
+            return None
+
+    def getFileName(self):
+        if self.activeFile is not None:
+            return self.activeProject.filePaths[self.activeFile].split("/")[-1]
+        else:
+            return None
 
     def getLineStates(self):
         return self.activeProject.lineStates[self.activeFile]
@@ -154,8 +169,9 @@ class Project():
             for j in range(len(self.files[i])):
                 if self.lineStates[i][j] in self.keep:
                     output.append(self.files[i][j])
-                
+            # Update to getFile
             self.fs.writeOut(self.filePaths[i], "\n".join(output))
+            
 # ##########################################################################################################################################
 # ##########################################################################################################################################
 

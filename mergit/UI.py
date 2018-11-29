@@ -618,13 +618,14 @@ class TextLine(GenericFrame):
 
 class TextBox(GenericFrame):
 
-    def __init__(self, x, y, parent, width=10, height=10, lines=[], font=DEFAULT_TEXT, font_size=16, scaling="xywh", text_color=(0, 0, 0), number_color=(0, 0, 0), background_color=(255,255,255), line_states=1, line_colors=[(255,255,255)]):
+    def __init__(self, x, y, parent, width=10, height=10, lines=[], font=DEFAULT_TEXT, font_size=16, scaling="xywh", text_color=(0, 0, 0), lineButton=False, number_color=(0, 0, 0), background_color=(255,255,255), line_states=1, line_colors=[(255,255,255)]):
         '''
         Constructor
         '''
         GenericFrame.__init__(self, x, y, parent, width=width, height=height, scaling=scaling + "p")
         self.changedState = False
         # Graphical Settings
+        self.lineButton = lineButton
         # Text
         self.setFont(font, font_size, text_color=text_color)  # assign all font variables
 
@@ -657,10 +658,11 @@ class TextBox(GenericFrame):
         for x in range(self.firstLine, min(self.firstLine + int(self.getHeight()//self.lineHeight), len(self.listOfLines)), 1):
             # Graphical Settings
             textLinePosition = (self.getX() + self.numberWidth + textBuffer, self.getY() + (self.lineHeight * counter))
-            textLineGBRect = (self.getX(), round(int(self.getY()) + (self.lineHeight * counter)), self.getWidth(), self.lineHeight)
+            textLineGBRect = (self.getX() + self.numberWidth, round(int(self.getY()) + (self.lineHeight * counter)), self.getWidth() - (self.getX() + self.numberWidth), self.lineHeight)
             # Drawing
-            gfxdraw.box(screen, textLineGBRect, self.listOfLines[x].getColor())
             self.buttons[counter].draw(screen)
+            gfxdraw.box(screen, textLineGBRect, self.listOfLines[x].getColor())
+            
             # Draw Line of Text
             label = TextLine(textLinePosition[0], textLinePosition[1], self, alignment="center left", height=self.lineHeight,
                              width=self.getWidth(), background_color=(0, 0, 0, 0), border=False)
@@ -711,14 +713,17 @@ class TextBox(GenericFrame):
 
     def setStates(self, states):
         for i in range(len(self.listOfLines)):
-            self.listOfLines[i].state = states[i]
+                self.listOfLines[i].state = states[i]
 
     def createButtons(self):
         self.buttons = []
         for i in range(int(min(self.getHeight() // self.lineHeight, len(self.lines) - self.firstLine))):
             buttonYPosition = self.getY() + (self.lineHeight * i)
 
-            button = Button(self.getX(), buttonYPosition, self, self.numberWidth, self.lineHeight, background_color=BUTTON_COLOR, border=False)
+            if self.lineButton:
+                button = Button(self.getX(), buttonYPosition, self, self.getWidth(), self.lineHeight, background_color=BUTTON_COLOR, border=False)
+            else:
+                button = Button(self.getX(), buttonYPosition, self, self.numberWidth, self.lineHeight, background_color=BUTTON_COLOR, border=False)
             button.box_base.changeSettings(background_color=BUTTON_COLOR)
             button.box_hover.changeSettings(background_color=BUTTON_HOVER)
             self.buttons.append(button)
@@ -755,3 +760,5 @@ class Line:
 
         def nextState(self):
             self.state = (self.state + 1) % self.states
+
+
