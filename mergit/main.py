@@ -34,7 +34,7 @@ class Application():
         self.screen = pyg.display.set_mode((self.screenWidth, self.screenHeight), pyg.RESIZABLE)
         pyg.display.set_caption("MerGit")
         try:
-            gameIcon = pyg.image.load('./resources/Icon.png')
+            gameIcon = pyg.image.load(resource_path('./resources/Icon.png'))
             pyg.display.set_icon(gameIcon)
         except FileNotFoundError:
             print("Windo icon file not found")
